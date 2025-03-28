@@ -9,7 +9,7 @@ variable "instatypedev" {
     description = "instance type is described"
     type = map(string)
     default = {
-        dev = "t2.micro"
+        dev = "t2.medium"
         stage = "t2.small"
       }
 }
@@ -20,7 +20,7 @@ variable "keyfiledev" {
 module "ec2-instance" {
     source = "./modules/ec2-instance"
     ami = var.amidev
-    instatype = lookup(var.instatypedev, terraform.workspace)
+    instatype = lookup(var.instatypedev, terraform.workspace, "t2.micro") #if im in dev environment it craeates t2medium, if in stage t2.smal  if im in default it automatically creates t2.micro as mentioned in this line
     keyfile = var.keyfiledev
 }
 
