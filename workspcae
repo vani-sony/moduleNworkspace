@@ -1,0 +1,56 @@
+
+provider "aws" {
+    region = "ap-south-1"
+}
+variable "amidev" {
+    description = "amiid is described here"
+}
+variable "instatypedev" {
+    description = "instance type is described"
+    type = map(string)
+    default = {
+        dev = "t2.micro"
+        stage = "t2.small"
+      }
+}
+variable "keyfiledev" {
+  description = "keyname is here"
+}
+
+module "ec2-instance" {
+    source = "./modules/ec2-instance"
+    ami = var.amidev
+    instatype = lookup(var.instatypedev, terraform.workspace)
+    keyfile = var.keyfiledev
+}
+
+
+
+
+cat terraform.tfvars
+amidev = "ami-05c179eced2eb9b5b"
+keyfiledev = "vaninew"
+
+
+
+
+.
+└── moduleNworkspace
+    ├── main.tf
+    ├── modules
+    │   └── ec2-instance
+    │       ├── main.tf
+    │       ├── output.tf
+    │       ├── terraform.tfvars
+    │       └── variable.tf
+    ├── terraform.tfstate.d
+    │   ├── dev
+    │   │   └── terraform.tfstate
+    │   └── stage
+    │       └── terraform.tfstate
+    └── terraform.tfvars
+
+
+
+before apply make sure ur in that dev/stage env
+terraform workspace select stage
